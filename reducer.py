@@ -19,12 +19,17 @@ import sys
 # Visa  205.96
 # Cash  455.51
 
-# Sum of all sales (values) is initialized with zero, we just started
-sum_of_values = 0
-
 # Previous key is initialized with None, we just started
 previous_key = None
 
+# sum of sales
+sum_of_values = 0
+
+# count starts at 0
+count = 0
+
+# Category dictionary 
+category_data = {}
 # For each new line in the standard input 
 for line in sys.stdin:
 
@@ -34,28 +39,20 @@ for line in sys.stdin:
     data = line.strip().split("\t")
 
     # Store the 2 elements of this line in seperate variables
-    key, value = data
+    category, sales = data
 
-    # Do we have a previous_key (previous_key != None) and 
-    # is the new key different than the previous key?
-    # This means the line starts with a new key (key changes e.g. from "Visa" to "Cash")
-    # Remember that our keys are sorted
-    if previous_key != None and previous_key != key:
-        # Then write the result of the old key (Key=category, Value= Sum of Sales)
-        # to the standart output (stdout)
-        # Key and value are seperated by a tab (\t)
-        # Line ends with new line (\n)
-        sys.stdout.write("{0}\t{1}\n".format(previous_key, sum_of_values))
-        # Sum of sales starts again with 0
-        sum_of_values = 0
+    # Update the count for the category
+    if category in category_data:  
+       category_data[category]["count"] += 1
+       category_data[category]["total_sales"] += float(sales)
+    else:
+       category_data[category] = {"count": 1, "total_sales":float(sales)}
+for category, data in category_data.items():
+    count = data["count"]
+    total_sales = data["total_sales"]    
+    average_sales = total_sales / count
 
-    # Add the value to the total sales
-    # a += b is the same as a = a + b
-    # the float function transforms the value
-    # to a float data type (like decimal)
-    sum_of_values += float(value)
-    # the previous key for the next iteration is the current key of the this iteration 
-    previous_key = key
+    if count > 114:        
+       sys.stdout.write("{0}\t{1}\n".format(category, average_sales))
 
-# write the last result to stdout
-sys.stdout.write("{0}\t{1}\n".format(previous_key, sum_of_values))
+    

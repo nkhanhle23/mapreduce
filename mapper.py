@@ -25,7 +25,12 @@ import sys
 # Output is tabulator (\t) separated 
 # New Line (\n) indicates a new record
 # Output is writing to the standard output
-
+# Dictionary to store the sum of values for each category 
+category_sum = {
+	"Computers": 0,
+	"Cameras": 0,
+	"Video Games": 0
+}
 # For each new line in the standard input (stdin) 
 for line in sys.stdin:
 
@@ -34,11 +39,20 @@ for line in sys.stdin:
     # the result is a tuple with 6 elements
     data = line.strip().split("\t")
 
+    # Check if the tuple has 6 elements
+    if len(data) != 6:
+       raise ValueErrror("Invalid tuple: {0}".format(data))
     # store the 6 elements of the tuple in seperate variables
     date, time, item, category, sales, payment = data
 
+    # List out only chosen categories
+    categories = ["Computers","Cameras","Video Games"]
+
+    if category in categories:
+        sys.stdout.write("{0}\t{1}\n".format(category, sales))
     # Write the key-value combination to standard output (stdout)
     # Key is the payment, value is the sales     
     # With a tab (\t) between key and value
     # New line \n means new record
-    sys.stdout.write("{0}\t{1}\n".format(payment, sales))
+
+
